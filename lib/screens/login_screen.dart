@@ -126,14 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: const Text("Don't have an account? "),
+                    child: const Text("Noch keinen Account? "),
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                   ),
                   GestureDetector(
                     onTap: () {},
                     child: Container(
                       child: const Text(
-                        "Sign up.",
+                        "Hier Registrieren.",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

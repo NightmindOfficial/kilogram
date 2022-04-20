@@ -200,14 +200,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: const Text("Already have an account? "),
+                    child: const Text("Du hast einen Account? "),
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                   ),
                   GestureDetector(
                     onTap: () {},
                     child: Container(
                       child: const Text(
-                        "Log in.",
+                        "Hier einloggen.",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
