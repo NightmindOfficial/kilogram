@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kilogram/utils/dimensions.dart';
 
+import '../helpers/size_guide.dart';
+
 class ResponsiveLayout extends StatelessWidget {
   final Widget webScreenLayout;
   final Widget mobileScreenLayout;
@@ -13,6 +15,7 @@ class ResponsiveLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeGuide().init(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > webScreenSize) {
