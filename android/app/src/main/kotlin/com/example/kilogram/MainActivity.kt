@@ -1,4 +1,4 @@
-package com.example.kilogram
+package de.otismohr.kilogram
 
 import io.flutter.embedding.android.FlutterActivity
 

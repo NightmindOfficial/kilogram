@@ -296,5 +296,6 @@ DerivedData/
 # Google API key and other resources
 GoogleService-Info.plist
 google-services.json
+lib/api/firebase_options.dart
 # Plugins (already resolved through pubspec.yaml)
 .flutter-plugins
