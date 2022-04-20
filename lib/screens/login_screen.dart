@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kilogram/resources/auth_methods.dart';
 import 'package:kilogram/utils/app_colors.dart';
+import 'package:kilogram/utils/snackbar_creator.dart';
 import 'package:kilogram/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,12 +16,31 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _mailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
     _mailController.dispose();
     _passController.dispose();
+  }
+
+  void logInUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods()
+        .logInUser(_mailController.text, _passController.text);
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res == "Login:Success") {
+      showSnackbar("Du hast dich erfolgreich eingeloggt!", context);
+    } else {
+      showSnackbar(res, context);
+      _passController.clear();
+    }
   }
 
   @override
@@ -68,9 +89,18 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               // Login Button
               InkWell(
-                onTap: () {},
+                onTap: logInUser,
                 child: Container(
-                  child: const Text("Einloggen"),
+                  child: !_isLoading
+                      ? const Text("Registrieren")
+                      : const SizedBox(
+                          height: 16.0,
+                          width: 16.0,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: primaryColor,
+                          ),
+                        ),
                   width: realScreenWidth(),
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),

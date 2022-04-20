@@ -20,7 +20,6 @@ class AuthMethods {
     String res = "An unknown error occurred.";
     try {
       if (mail.isNotEmpty && pass.isNotEmpty && uname.isNotEmpty) {
-        log("Initiating");
         UserCredential _cred = await _auth.createUserWithEmailAndPassword(
             email: mail, password: pass);
 
@@ -43,6 +42,26 @@ class AuthMethods {
         res = "Login:Success";
       } else {
         res = "Du hast noch nicht alle Felder ausgefüllt.";
+      }
+    } on FirebaseAuthException catch (e) {
+      res = e.code;
+    } catch (e) {
+      res = e.toString();
+    }
+    log(res);
+    return res;
+  }
+
+  //Log in user
+  Future<String> logInUser(String mail, String pass) async {
+    String res = "An unknown error occurred.";
+
+    try {
+      if (mail.isNotEmpty && pass.isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(email: mail, password: pass);
+        res = "Login:Success";
+      } else {
+        res = "Du hast nicht alle Felder ausgefüllt.";
       }
     } on FirebaseAuthException catch (e) {
       res = e.code;
