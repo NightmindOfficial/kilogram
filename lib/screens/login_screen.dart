@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SvgPicture.asset(
                 "assets/svg/kilogram.svg",
                 color: Colors.white,
-                height: 64,
+                height: 48,
               ),
               const SizedBox(height: 64.0),
 

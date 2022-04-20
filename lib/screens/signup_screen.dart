@@ -1,8 +1,15 @@
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kilogram/resources/auth_methods.dart';
 import 'package:kilogram/utils/app_colors.dart';
+import 'package:kilogram/utils/image_picker.dart';
+import 'package:kilogram/utils/snackbar_creator.dart';
 import 'package:kilogram/widgets/text_field_input.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -17,6 +24,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _unameController = TextEditingController();
+  Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -25,6 +34,35 @@ class _SignupScreenState extends State<SignupScreen> {
     _passController.dispose();
     _bioController.dispose();
     _unameController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = im;
+    });
+  }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signupUser(
+      _mailController.text,
+      _passController.text,
+      _unameController.text,
+      _bioController.text,
+      _image!,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+    if (res == "Login:Success") {
+      showSnackbar("Dein Account wurde erfolgreich erstellt!", context);
+    } else {
+      showSnackbar(res, context);
+      _passController.clear();
+    }
   }
 
   @override
@@ -48,23 +86,28 @@ class _SignupScreenState extends State<SignupScreen> {
               SvgPicture.asset(
                 "assets/svg/kilogram.svg",
                 color: Colors.white,
-                height: 64,
+                height: 48,
               ),
               const SizedBox(height: 64.0),
 
               //Circular Profile Picture Uploader
               Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 64.0,
-                    backgroundImage: NetworkImage(
-                        "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80"),
-                  ),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64.0, backgroundImage: MemoryImage(_image!))
+                      : const CircleAvatar(
+                          radius: 64.0,
+                          backgroundImage: NetworkImage(
+                              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+                        ),
                   Positioned(
                     bottom: -10,
                     right: 0,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        selectImage();
+                      },
                       icon: const Icon(Icons.add_a_photo_rounded),
                     ),
                   ),
@@ -74,39 +117,45 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(
                 height: 24.0,
               ),
+              Expanded(
+                flex: 3,
+                child: ListView(
+                  children: [
+                    TextFieldInput(
+                      _unameController,
+                      hintText: "Username",
+                      textInputType: TextInputType.text,
+                    ),
+                    const SizedBox(
+                      height: 12.0,
+                    ),
+                    TextFieldInput(
+                      _bioController,
+                      hintText: "Über dich",
+                      textInputType: TextInputType.multiline,
+                    ),
+                    const SizedBox(
+                      height: 12.0,
+                    ),
 
-              TextFieldInput(
-                _unameController,
-                hintText: "Username",
-                textInputType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              TextFieldInput(
-                _bioController,
-                hintText: "Über dich",
-                textInputType: TextInputType.multiline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-
-              // Text fields input Email
-              TextFieldInput(
-                _mailController,
-                hintText: "E-Mail",
-                textInputType: TextInputType.emailAddress,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              // Text fields input Password
-              TextFieldInput(
-                _passController,
-                hintText: "Passwort",
-                textInputType: TextInputType.visiblePassword,
-                isPass: true,
+                    // Text fields input Email
+                    TextFieldInput(
+                      _mailController,
+                      hintText: "E-Mail",
+                      textInputType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(
+                      height: 12.0,
+                    ),
+                    // Text fields input Password
+                    TextFieldInput(
+                      _passController,
+                      hintText: "Passwort",
+                      textInputType: TextInputType.visiblePassword,
+                      isPass: true,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 24.0,
@@ -114,9 +163,18 @@ class _SignupScreenState extends State<SignupScreen> {
 
               // Login Button
               InkWell(
-                onTap: () {},
+                onTap: signUpUser,
                 child: Container(
-                  child: const Text("Registrieren"),
+                  child: !_isLoading
+                      ? const Text("Registrieren")
+                      : const SizedBox(
+                          height: 16.0,
+                          width: 16.0,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: primaryColor,
+                          ),
+                        ),
                   width: realScreenWidth(),
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -137,7 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Container(),
                 flex: 1,
               ),
-              // Transition to Signup
+              // Transition to Login
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

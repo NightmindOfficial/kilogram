@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kilogram/layout/mobile_screen_layout.dart';
 import 'package:kilogram/layout/responsive_layout_screen.dart';
 import 'package:kilogram/layout/web_screen_layout.dart';
-import 'package:kilogram/screens/login_screen.dart';
+import 'package:kilogram/resources/firebase_options.dart';
 import 'package:kilogram/utils/app_colors.dart';
-
-import 'api/firebase_options.dart';
-import 'helpers/size_guide.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
