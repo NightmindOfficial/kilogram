@@ -33,10 +33,10 @@ class AuthMethods {
         // Create User Model
 
         model.User user = model.User(
-          email: mail,
           uid: _cred.user!.uid,
-          profilePictureUrl: profilePictureUrl,
+          email: mail,
           uname: uname,
+          profilePictureUrl: profilePictureUrl,
           bio: bio,
           followers: [],
           following: [],
@@ -80,16 +80,14 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> signOutUser() async {
-    String res = "Unexpected Error";
-    try {
-      await _auth.signOut();
-      res = "Logout:Success";
-    } on FirebaseAuthException catch (e) {
-      res = e.code;
-    } catch (e) {
-      res = e.toString();
-    }
-    return res;
+  // Get User Info from Firestore
+
+  Future<model.User> getUserDetails() async {
+    User currentUser = _auth.currentUser!;
+
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    return model.User.snapToUser(snap);
   }
 }
