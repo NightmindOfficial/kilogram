@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:kilogram/screens/profile_screen.dart';
 import 'package:kilogram/utils/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -15,7 +16,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool isShowUsers = false;
-
   @override
   void dispose() {
     _searchController.dispose();
@@ -57,14 +57,26 @@ class _SearchScreenState extends State<SearchScreen> {
                   } else {
                     return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
-                      itemBuilder: ((context, index) => ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                snapshot.data!.docs[index]['profilePictureUrl'],
+                      itemBuilder: ((context, index) => InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileScreen(
+                                    uid: snapshot.data!.docs[index]['uid'],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  snapshot.data!.docs[index]
+                                      ['profilePictureUrl'],
+                                ),
                               ),
-                            ),
-                            title: Text(
-                              snapshot.data!.docs[index]['username'],
+                              title: Text(
+                                snapshot.data!.docs[index]['username'],
+                              ),
                             ),
                           )),
                     );
