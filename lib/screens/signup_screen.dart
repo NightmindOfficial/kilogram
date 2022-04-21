@@ -56,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
       _passController.text,
       _unameController.text,
       _bioController.text,
-      _image!,
+      _image,
     );
     setState(() {
       _isLoading = false;

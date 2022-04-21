@@ -16,11 +16,14 @@ class AuthMethods {
     String pass,
     String uname,
     String bio,
-    Uint8List file,
+    Uint8List? file,
   ) async {
     String res = "An unknown error occurred.";
     try {
-      if (mail.isNotEmpty && pass.isNotEmpty && uname.isNotEmpty) {
+      if (mail.isNotEmpty &&
+          pass.isNotEmpty &&
+          uname.isNotEmpty &&
+          file != null) {
         UserCredential _cred = await _auth.createUserWithEmailAndPassword(
             email: mail, password: pass);
 
@@ -48,6 +51,8 @@ class AuthMethods {
             .doc(_cred.user!.uid)
             .set(user.userToJson());
         res = "Login:Success";
+      } else if (file == null) {
+        res = "Du musst ein Profilbild hochladen.";
       } else {
         res = "Du hast noch nicht alle Felder ausgefüllt.";
       }
