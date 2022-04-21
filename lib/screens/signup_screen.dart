@@ -6,7 +6,11 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kilogram/layout/mobile_screen_layout.dart';
+import 'package:kilogram/layout/responsive_layout_screen.dart';
+import 'package:kilogram/layout/web_screen_layout.dart';
 import 'package:kilogram/resources/auth_methods.dart';
+import 'package:kilogram/screens/login_screen.dart';
 import 'package:kilogram/utils/app_colors.dart';
 import 'package:kilogram/utils/image_picker.dart';
 import 'package:kilogram/utils/snackbar_creator.dart';
@@ -59,6 +63,15 @@ class _SignupScreenState extends State<SignupScreen> {
     });
     if (res == "Login:Success") {
       showSnackbar("Dein Account wurde erfolgreich erstellt!", context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: ((context) => const ResponsiveLayout(
+                mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+              )),
+        ),
+      );
     } else {
       showSnackbar(res, context);
       _passController.clear();
@@ -204,7 +217,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
                     child: Container(
                       child: const Text(
                         "Hier einloggen.",

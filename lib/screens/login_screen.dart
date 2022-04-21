@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kilogram/layout/mobile_screen_layout.dart';
+import 'package:kilogram/layout/responsive_layout_screen.dart';
+import 'package:kilogram/layout/web_screen_layout.dart';
 import 'package:kilogram/resources/auth_methods.dart';
+import 'package:kilogram/screens/signup_screen.dart';
 import 'package:kilogram/utils/app_colors.dart';
 import 'package:kilogram/utils/snackbar_creator.dart';
 import 'package:kilogram/widgets/text_field_input.dart';
@@ -37,6 +41,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (res == "Login:Success") {
       showSnackbar("Du hast dich erfolgreich eingeloggt!", context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: ((context) => const ResponsiveLayout(
+                mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+              )),
+        ),
+      );
     } else {
       showSnackbar(res, context);
       _passController.clear();
@@ -45,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeGuide().init(context);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -130,7 +144,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignupScreen(),
+                        ),
+                      );
+                    },
                     child: Container(
                       child: const Text(
                         "Hier Registrieren.",

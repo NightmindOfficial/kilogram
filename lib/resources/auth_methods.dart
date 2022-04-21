@@ -71,4 +71,17 @@ class AuthMethods {
     log(res);
     return res;
   }
+
+  Future<String> signOutUser() async {
+    String res = "Unexpected Error";
+    try {
+      await _auth.signOut();
+      res = "Logout:Success";
+    } on FirebaseAuthException catch (e) {
+      res = e.code;
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
 }
