@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kilogram/models/user.dart' as model;
 import 'package:kilogram/resources/storage_methods.dart';
 
 class AuthMethods {
@@ -26,19 +27,26 @@ class AuthMethods {
         log("New User created with UID " + _cred.user!.uid);
 
         //Upload image
-        String photoUrl = await StorageMethods()
+        String profilePictureUrl = await StorageMethods()
             .uploadImageToStorage('profilePictures', file, false);
 
+        // Create User Model
+
+        model.User user = model.User(
+          email: mail,
+          uid: _cred.user!.uid,
+          profilePictureUrl: profilePictureUrl,
+          uname: uname,
+          bio: bio,
+          followers: [],
+          following: [],
+        );
+
         //Add User to Firestore
-        await _firestore.collection('users').doc(_cred.user!.uid).set({
-          'uname': uname,
-          'uid': _cred.user!.uid,
-          'email': mail,
-          'bio': bio,
-          'followers': [],
-          'following': [],
-          'profilePictureUrl': photoUrl,
-        });
+        await _firestore
+            .collection('users')
+            .doc(_cred.user!.uid)
+            .set(user.userToJson());
         res = "Login:Success";
       } else {
         res = "Du hast noch nicht alle Felder ausgefüllt.";
