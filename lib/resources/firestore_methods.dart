@@ -62,4 +62,37 @@ class FirestoreMethods {
       log(e.toString());
     }
   }
+
+  // Post a comment
+
+  Future<void> postComment(
+    String postId,
+    String text,
+    String uid,
+    String uname,
+    String profilePic,
+  ) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'commentId': commentId,
+          'profilePic': profilePic,
+          'username': uname,
+          'uid': uid,
+          'comment': text,
+          'datePublished': DateTime.now(),
+        });
+      } else {
+        log("No Text was given. Resuming Operations.");
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

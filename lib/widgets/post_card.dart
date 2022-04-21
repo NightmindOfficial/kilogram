@@ -1,10 +1,15 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:kilogram/models/user.dart' as model;
 import 'package:kilogram/providers/user_data_provider.dart';
 import 'package:kilogram/resources/firestore_methods.dart';
+import 'package:kilogram/screens/comment_screen.dart';
 import 'package:kilogram/utils/app_colors.dart';
+import 'package:kilogram/utils/snackbar_creator.dart';
 import 'package:kilogram/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +27,29 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLength = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+          .instance
+          .collection('posts')
+          .doc(widget.datastream['postId'])
+          .collection('comments')
+          .get();
+
+      commentLength = snap.docs.length;
+    } catch (e) {
+      showSnackbar(e.toString(), context);
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +200,13 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: ((context) => CommentScreen(
+                          datastream: widget.datastream,
+                        )),
+                  ),
+                ),
                 icon: const Icon(
                   Icons.chat_bubble_outline_rounded,
                   color: primaryColor,
@@ -245,9 +279,9 @@ class _PostCardState extends State<PostCard> {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: const Text(
-                      "View all 69 comments",
-                      style: TextStyle(
+                    child: Text(
+                      "View all $commentLength comments",
+                      style: const TextStyle(
                         fontSize: 14,
                         color: secondaryColor,
                       ),
