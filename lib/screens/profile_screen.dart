@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kilogram/resources/auth_methods.dart';
 import 'package:kilogram/resources/firestore_methods.dart';
+import 'package:kilogram/screens/login_screen.dart';
 import 'package:kilogram/utils/app_colors.dart';
 import 'package:kilogram/utils/snackbar_creator.dart';
 import 'package:kilogram/widgets/follow_button.dart';
@@ -115,12 +117,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   isOwnProfile
                                       ? FollowButton(
-                                          text: "Profil bearbeiten",
+                                          text: "Ausloggen",
                                           backgroundColor:
                                               mobileBackgroundColor,
                                           textColor: primaryColor,
                                           borderColor: Colors.grey,
-                                          function: () {},
+                                          function: () async {
+                                            AuthMethods().signOut();
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    const LoginScreen()),
+                                              ),
+                                            );
+                                          },
                                         )
                                       : isFollowingUser
                                           ? FollowButton(
