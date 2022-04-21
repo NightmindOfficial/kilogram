@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:kilogram/utils/app_colors.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({Key? key}) : super(key: key);
+  final Map<String, dynamic> datastream;
+
+  const PostCard({
+    Key? key,
+    required this.datastream,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +25,9 @@ class PostCard extends StatelessWidget {
             // HEADER SECTION
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 16,
-                  backgroundImage: NetworkImage(
-                      "https://images.unsplash.com/photo-1650468685760-ad2d9ccddf19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60"),
+                  backgroundImage: NetworkImage(datastream['profileImage']),
                 ),
                 Expanded(
                   child: Padding(
@@ -30,10 +35,10 @@ class PostCard extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          "username",
-                          style: TextStyle(
+                          datastream['username'],
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -52,7 +57,7 @@ class PostCard extends StatelessWidget {
                           ),
                           shrinkWrap: true,
                           children: [
-                            'Delete',
+                            'Löschen',
                           ]
                               .map(
                                 (e) => InkWell(
@@ -83,7 +88,7 @@ class PostCard extends StatelessWidget {
             height: realScreenHeight() * 0.35,
             width: realScreenWidth(),
             child: Image.network(
-              "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80",
+              datastream['photoUrl'],
               fit: BoxFit.cover,
             ),
           ),
@@ -143,7 +148,7 @@ class PostCard extends StatelessWidget {
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text(
-                    "42 likes",
+                    "${datastream['likes'].length} likes",
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
@@ -153,18 +158,17 @@ class PostCard extends StatelessWidget {
                     top: 8.0,
                   ),
                   child: RichText(
-                    text: const TextSpan(
-                      style: TextStyle(color: primaryColor),
+                    text: TextSpan(
+                      style: const TextStyle(color: primaryColor),
                       children: [
                         TextSpan(
-                          text: 'username',
-                          style: TextStyle(
+                          text: datastream['username'],
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text:
-                              ' This is some description to re replaced soon.',
+                          text: " ${datastream['description']}",
                         ),
                       ],
                     ),
@@ -187,9 +191,10 @@ class PostCard extends StatelessWidget {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: const Text(
-                      "2 hours ago",
-                      style: TextStyle(
+                    child: Text(
+                      DateFormat.yMMMMEEEEd()
+                          .format(datastream['datePublished'].toDate()),
+                      style: const TextStyle(
                         fontSize: 10,
                         color: secondaryColor,
                       ),
