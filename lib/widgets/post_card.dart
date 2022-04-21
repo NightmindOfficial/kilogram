@@ -111,7 +111,11 @@ class _PostCardState extends State<PostCard> {
                                     ),
                                     child: Text(e),
                                   ),
-                                  onTap: () {},
+                                  onTap: () async {
+                                    FirestoreMethods().deletePost(
+                                        widget.datastream['postId']);
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
                               )
                               .toList(),
