@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:kilogram/helpers/size_guide.dart';
 import 'package:kilogram/screens/profile_screen.dart';
 import 'package:kilogram/utils/app_colors.dart';
+
+import '../helpers/global_variables.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -99,8 +102,11 @@ class _SearchScreenState extends State<SearchScreen> {
                         snapshot.data!.docs[index]['photoUrl'],
                         fit: BoxFit.cover,
                       ),
-                      staggeredTileBuilder: (index) => StaggeredTile.count(
-                          (index % 7 == 0) ? 2 : 1, (index % 7 == 0) ? 2 : 1),
+                      staggeredTileBuilder: (index) =>
+                          realScreenWidth() > webScreenSize
+                              ? const StaggeredTile.count(1, 1)
+                              : StaggeredTile.count((index % 7 == 0) ? 2 : 1,
+                                  (index % 7 == 0) ? 2 : 1),
                     );
                   }
                 })));

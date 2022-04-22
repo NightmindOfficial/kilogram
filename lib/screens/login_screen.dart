@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kilogram/helpers/global_variables.dart';
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kilogram/layout/mobile_screen_layout.dart';
@@ -62,10 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal:
-                proportionateScreenWidthFraction(ScreenFraction.onetenth),
-          ),
+          padding: realScreenWidth() > webScreenSize
+              ? EdgeInsets.symmetric(
+                  horizontal: proportionateScreenWidthFraction(
+                      ScreenFraction.onequarter))
+              : EdgeInsets.symmetric(
+                  horizontal:
+                      proportionateScreenWidthFraction(ScreenFraction.onetenth),
+                ),
           width: realScreenWidth(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: logInUser,
                 child: Container(
                   child: !_isLoading
-                      ? const Text("Registrieren")
+                      ? const Text("Einloggen")
                       : const SizedBox(
                           height: 16.0,
                           width: 16.0,

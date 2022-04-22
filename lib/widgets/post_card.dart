@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kilogram/helpers/global_variables.dart';
 import 'package:kilogram/helpers/size_guide.dart';
 import 'package:kilogram/models/user.dart' as model;
 import 'package:kilogram/providers/user_data_provider.dart';
@@ -56,12 +57,14 @@ class _PostCardState extends State<PostCard> {
     final model.User user = Provider.of<UserDataProvider>(context).getUser;
 
     return Container(
-      color: mobileBackgroundColor,
+      color: realScreenWidth() > webScreenSize
+          ? mobileBackgroundColor
+          : webBackgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0)
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0)
                 .copyWith(right: 0),
 
             // HEADER SECTION

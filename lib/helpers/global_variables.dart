@@ -12,7 +12,9 @@ List<Widget> homeScreenItems = [
   const FeedScreen(),
   const SearchScreen(),
   const AddPostScreen(),
-  const Text("Notif"),
+  const Center(
+    child: Text("Favorites would appear on this screen."),
+  ),
   ProfileScreen(
     uid: FirebaseAuth.instance.currentUser!.uid,
   ),
